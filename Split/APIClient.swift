@@ -49,9 +49,7 @@ class APIClient {
         http.post(apiURL, parameters: params, progress: { (progress: Progress) -> Void in
             }, success: { (dataTask: URLSessionDataTask, response: Any?) -> Void in
                 
-                let res = response!
-                
-                let transactions = parseTransactionJSON(data: res)
+                let transactions = parseTransactionJSON(data: response!)
                 
                 completion(transactions, nil)
                 

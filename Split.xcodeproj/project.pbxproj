@@ -69,6 +69,14 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
+		E45650851E2956D60031F993 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E484F80C1E27D38A00A36549 /* ViewController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
 		E484F7FE1E27D38A00A36549 = {
 			isa = PBXGroup;
 			children = (
@@ -92,11 +100,11 @@
 			children = (
 				E463F0B31E27F9FC00A286C1 /* APIClient.swift */,
 				E484F80A1E27D38A00A36549 /* AppDelegate.swift */,
-				E484F80C1E27D38A00A36549 /* ViewController.swift */,
 				E484F80E1E27D38A00A36549 /* Main.storyboard */,
 				E484F8111E27D38A00A36549 /* Assets.xcassets */,
 				E484F8131E27D38A00A36549 /* LaunchScreen.storyboard */,
 				E484F8161E27D38A00A36549 /* Info.plist */,
+				E45650851E2956D60031F993 /* View Controllers */,
 				E45650841E2842400031F993 /* Models */,
 			);
 			path = Split;
