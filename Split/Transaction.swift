@@ -58,4 +58,34 @@ class Transaction: NSObject {
         print("Categories: " + categories)
     }
     
+    func toString() -> Dictionary<String, String> {
+        var dic = Dictionary<String, String>()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        
+        var categories = String()
+        if category != nil {
+            for c in self.category! {
+                categories += c
+                categories += ", "
+            }
+            
+            //removes extra space and comma at the end of categories
+            categories.remove(at: categories.index(before: categories.endIndex))
+            categories.remove(at: categories.index(before: categories.endIndex))
+        } else {
+            categories = "None"
+        }
+        
+        dic["category"] = categories
+        dic["date"] = dateFormatter.string(from: self.date! as Date)
+        dic["amount"] = "$" + String(format:"%.2f", self.amount!)
+        dic["pending"] = self.pending!.description
+        dic["name"] = self.name!
+        dic["account"] = self.account_name!
+        
+        return dic
+    }
+    
 }
