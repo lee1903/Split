@@ -15,7 +15,6 @@ class APIClient {
     static let secret = "a41afe93871ee2d5818311a4bd5c8e"
     
     static let http = AFHTTPSessionManager()
-    static let apiURL = "https://tartan.plaid.com/connect"
     
     private class func parseTransactionJSON(data: Any) -> [Transaction] {
         let dic = data as! NSDictionary
@@ -42,9 +41,10 @@ class APIClient {
         return transactions
     }
     
-    class func getTransactions(username: String, password: String, bank: String, completion: @escaping (_ response: [Transaction]?, _ error: Error?) -> ()){
+    class func getTransactions(accessToken: String, completion: @escaping (_ response: [Transaction]?, _ error: Error?) -> ()){
         
-        let params = ["client_id" : client_id, "secret" : secret, "username" : username, "password" : password, "type" : bank]
+        let apiURL = "https://tartan.plaid.com/connect/get"
+        let params = ["client_id" : client_id, "secret" : secret, "access_token" : accessToken]
         
         http.post(apiURL, parameters: params, progress: { (progress: Progress) -> Void in
             }, success: { (dataTask: URLSessionDataTask, response: Any?) -> Void in
@@ -52,6 +52,26 @@ class APIClient {
                 let transactions = parseTransactionJSON(data: response!)
                 
                 completion(transactions, nil)
+                
+                
+        }) { (dataTask: URLSessionDataTask?, error: Error) -> Void in
+            
+            completion(nil, error)
+        }
+    }
+    
+    class func getAccessToken(username: String, password: String, bank: String, completion: @escaping (_ response: String?, _ error: Error?) -> ()){
+        
+        let apiURL = "https://tartan.plaid.com/connect"
+        let params = ["client_id" : client_id, "secret" : secret, "username" : username, "password" : password, "type" : bank]
+        
+        http.post(apiURL, parameters: params, progress: { (progress: Progress) -> Void in
+            }, success: { (dataTask: URLSessionDataTask, response: Any?) -> Void in
+                
+                let res = response as! NSDictionary
+                let accessToken = res["access_token"] as! String
+                
+                completion(accessToken, nil)
                 
                 
         }) { (dataTask: URLSessionDataTask?, error: Error) -> Void in

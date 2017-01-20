@@ -16,6 +16,11 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let defaults = UserDefaults.standard
+        let accessToken = defaults.object(forKey: "access_token")
+        if accessToken != nil {
+            self.transitionToTransactions(accessToken: accessToken as! String)
+        }
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -30,16 +35,15 @@ class ViewController: UIViewController {
         let password = passwordTextField.text!
         let bank = bankTextfield.text!
         
-        APIClient.getTransactions(username: username, password: password, bank: bank) { (response, error) in
+        APIClient.getAccessToken(username: username, password: password, bank: bank) { (response, error) in
             if response == nil {
-                print("failed to retrieve transactions")
+                print("failed to retrieve access token")
             } else {
-                for transaction in response! {
-                    transaction.printDetails()
-                    print()
-                }
+                let defaults = UserDefaults.standard
+                defaults.set(response!, forKey: "access_token")
+                defaults.synchronize()
                 
-                self.performSegue(withIdentifier: "TransactionSegue", sender: response!)
+                self.transitionToTransactions(accessToken: response!)
             }
         }
     }
@@ -55,6 +59,21 @@ class ViewController: UIViewController {
             viewController.transactions = transactions
         }
      }
+    
+    func transitionToTransactions(accessToken: String) {
+        print(accessToken)
+        APIClient.getTransactions(accessToken: accessToken) { (response, error) in
+            if response == nil {
+                print("failed to retrieve transactions")
+            } else {
+                for transaction in response! {
+                    transaction.printDetails()
+                    print()
+                }
+                self.performSegue(withIdentifier: "TransactionSegue", sender: response!)
+            }
+        }
+    }
  
 
 }
